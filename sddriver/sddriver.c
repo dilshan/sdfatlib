@@ -21,7 +21,7 @@
  * <https://github.com/tmolteno/openfat>
  *****************************************************************************/
 
-include <stdint.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #include "sdcmd.h"

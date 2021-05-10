@@ -45,37 +45,37 @@ uint8_t cardType;
 
 static uint8_t sdDrvCommand(uint8_t cmd, uint32_t arg)
 {
-	uint8_t buf[6];
-	uint8_t ret;
+    uint8_t buf[6];
+    uint8_t ret;
 
     // Start + command index.
-	buf[0] = cmd | 0x40;
+    buf[0] = cmd | 0x40;
 
     // ACMDn is the command sequence of CMD55-CMDn.
-	if (buf[0] & 0x80)
+    if (buf[0] & 0x80)
     {
-		buf[0] &= 0x7F;
-		ret = sdDrvCommand(SD_CMD55, 0);
-		if (ret > 1) 
+        buf[0] &= 0x7F;
+        ret = sdDrvCommand(SD_CMD55, 0);
+        if (ret > 1) 
         {
             return ret;
         }
-	}
+    }
 
     // Argument data [31...24].
-	buf[1] = (arg >> 24) & 0xFF;
+    buf[1] = (arg >> 24) & 0xFF;
 
     // Argument data [23...16].
-	buf[2] = (arg >> 16) & 0xFF;
+    buf[2] = (arg >> 16) & 0xFF;
 
     // Argument data [15...8].
-	buf[3] = (arg >> 8) & 0xFF;
+    buf[3] = (arg >> 8) & 0xFF;
 
     // Argument data [7...0].
-	buf[4] = arg & 0xFF;
+    buf[4] = arg & 0xFF;
 
     // CRC byte.
-	if(cmd == SD_CMD0) 
+    if(cmd == SD_CMD0) 
     { 
         // Pre calculated CRC for idle state.
         buf[5] = 0x95;
@@ -91,17 +91,17 @@ static uint8_t sdDrvCommand(uint8_t cmd, uint32_t arg)
         buf[5] = 0x01;
     }
 
-	sdSPISelect();
-	sdSPIWriteBuffer(buf, sizeof(buf));
-
-	do 
+    sdSPISelect();
+    sdSPIWriteBuffer(buf, sizeof(buf));
+    
+    do 
     { 
         // Wait for response byte.
-		ret = sdSPIreadwrite(0xFF);
-	} 
+        ret = sdSPIreadwrite(0xFF);
+    } 
     while(ret & 0x80);
 
-	return ret;
+    return ret;
 }
 
 static int sdDrvGetBlock(uint8_t *buf, int len)
@@ -122,7 +122,7 @@ static int sdDrvGetBlock(uint8_t *buf, int len)
     // Ignore CRC word.
     loggerOutputLine("sdDrvGetBlock::CRC");
     sdSPIreadwrite(0xFF);
-	sdSPIreadwrite(0xFF);
+    sdSPIreadwrite(0xFF);
 
     return 0;
 }
@@ -131,7 +131,7 @@ static int sdDrvSetBlock(const uint8_t *buf, int len, uint8_t token)
 {
     // Wait until SD card to getting into idle.
     loggerOutputLine("sdDrvSetBlock");
-	while(sdSPIreadwrite(0xFF) != 0xFF);
+    while(sdSPIreadwrite(0xFF) != 0xFF);
 
     // Send token.
     loggerOutputLine("sdDrvSetBlock::Token");
@@ -177,9 +177,9 @@ int8_t sdDrvInit()
     loggerOutputLine("sdDrvInit::SD_CMD0");
     if(sdDrvCommand(SD_CMD0, 0) != 1) 
 	{
-		// Unable to reset the SD card.
-        loggerOutputLine("sdDrvInit::SD_CMD0 fail");		
-		return -1;
+            // Unable to reset the SD card.
+            loggerOutputLine("sdDrvInit::SD_CMD0 fail");		
+            return -1;
 	}
 
     // Identify the Version 1.x or Version 2.x SD card.
@@ -282,15 +282,15 @@ int sdDrvReadSector(const struct block_device *bldev, uint32_t sector, uint32_t 
 
     if(count == 1)
     {
-		// Single block read.
+        // Single block read.
         loggerOutputLine("sdDrvReadSector::Single block");
 
         if(sdDrvCommand(SD_CMD17, sector) == 0)
         {                              
-			sdDrvGetBlock(buf, 512);
+            sdDrvGetBlock(buf, 512);
             status++;
-		}
-	}
+        }
+    }
     else
     {
         // Multipal block read.
@@ -299,26 +299,26 @@ int sdDrvReadSector(const struct block_device *bldev, uint32_t sector, uint32_t 
         // Start with multipal transfer command.
         if(sdDrvCommand(SD_CMD18, sector) == 0)
         {
-			loggerOutputLine("sdDrvReadSector::SD_CMD18");
+            loggerOutputLine("sdDrvReadSector::SD_CMD18");
 
             do
             {
-				if(sdDrvGetBlock(buf, 512) != 0) 
+                if(sdDrvGetBlock(buf, 512) != 0) 
                 {
                     // Block read operation fail.
                     loggerOutputLine("sdDrvReadSector::Block read fail");
                     break;
                 }
 
-				buf += 512;
+                buf += 512;
                 status++;
-			}
+            }
             while (--count);        
 
             // End of transmission.
             loggerOutputLine("sdDrvReadSector::SD_CMD12");
-			sdDrvCommand(SD_CMD12, 0);
-		}
+            sdDrvCommand(SD_CMD12, 0);
+        }
     }
 
     sdSPIRelease();
@@ -375,16 +375,16 @@ int sdDrvWriteSector(const struct block_device *bldev, uint32_t sector, uint32_t
         {
             do
             {
-				sdDrvSetBlock(buf, 512, TOKEN_MULTI_WRITE);
-				buf += 512;
+                sdDrvSetBlock(buf, 512, TOKEN_MULTI_WRITE);
+                buf += 512;
                 status++;
-			}
+            }
             while (--count);
 
             // End of bulk write operation.
-			if (sdDrvSetBlock(0, 0, TOKEN_STOP_TRAN) != 0)
+            if (sdDrvSetBlock(0, 0, TOKEN_STOP_TRAN) != 0)
             {
-				// Block write end operation fail.
+                // Block write end operation fail.
                 loggerOutputLine("sdDrvWriteSector::Block write end fail");
                 status = 0;
             }

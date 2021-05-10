@@ -60,7 +60,7 @@ void sdSPIInit()
 {
     // Enable peripheral clocks for SPI related I/O ports.
     rcc_periph_clock_enable(SDDRV_SPI_PORT_CLK_ID);
-	rcc_periph_clock_enable(SDDRV_SPI_CS_PORT_CLK_ID);
+    rcc_periph_clock_enable(SDDRV_SPI_CS_PORT_CLK_ID);
     
     // Enable peripheral clocks for SPI to handle SD card interface.
     rcc_periph_clock_enable(SDDRV_SPI_CLK_ID);
@@ -79,38 +79,38 @@ void sdCardIntfInit()
     spi_init_master(SDDRV_SPI, SPI_CR1_BAUDRATE_FPCLK_DIV_2, SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE, SPI_CR1_CPHA_CLK_TRANSITION_2, SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
 
     spi_enable_software_slave_management(SDDRV_SPI);
-	spi_set_nss_high(SDDRV_SPI);
+    spi_set_nss_high(SDDRV_SPI);
     spi_enable(SDDRV_SPI);
 }   
 
 uint8_t sdSPIreadwrite(uint8_t data)
 {
-	while(SPI_SR(SDDRV_SPI) & SPI_SR_BSY);
-	SPI_DR(SDDRV_SPI) = data;
+    while(SPI_SR(SDDRV_SPI) & SPI_SR_BSY);
+    SPI_DR(SDDRV_SPI) = data;
 
-	while(!(SPI_SR(SDDRV_SPI) & SPI_SR_RXNE));
-	return SPI_DR(SDDRV_SPI);
+    while(!(SPI_SR(SDDRV_SPI) & SPI_SR_RXNE));
+    return SPI_DR(SDDRV_SPI);
 }
 
 void sdSPISelect()
 {
-	gpio_clear(SDDRV_SPI_CS_PORT, SDDRV_SPI_CS);
+    gpio_clear(SDDRV_SPI_CS_PORT, SDDRV_SPI_CS);
 	
     // Wait until not busy.
-	while(sdSPIreadwrite(0xFF) == 0);
+    while(sdSPIreadwrite(0xFF) == 0);
 }
 
 void sdSPIRelease()
 {
-	gpio_set(SDDRV_SPI_CS_PORT, SDDRV_SPI_CS);
-	sdSPIreadwrite(0xFF);
+    gpio_set(SDDRV_SPI_CS_PORT, SDDRV_SPI_CS);
+    sdSPIreadwrite(0xFF);
 }
 
 void sdSPIWriteBuffer(const uint8_t *buf, int len)
 {
-	while(len--)
+    while(len--)
     {
-	    sdSPIreadwrite(*buf++);
+        sdSPIreadwrite(*buf++);
     }
 }
 
@@ -118,6 +118,6 @@ void sdSPIReadBuffer(uint8_t *buf, int len)
 {
     while(len--)
     {
-	    *buf++ = sdSPIreadwrite(0xFF);
+        *buf++ = sdSPIreadwrite(0xFF);
     }
 }

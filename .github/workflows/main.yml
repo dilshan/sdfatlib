@@ -22,10 +22,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Setup CI pcakge.
-      - name: Setup CI package
-        run: npm ci
-      
       # Install ARM toolchain and build the whole project.
       - name: Install ARM toolchain
         run: arm-none-eabi-gcc --version

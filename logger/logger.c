@@ -61,11 +61,11 @@ void loggerInit()
 
     // Set USART to provide debug outputs with default baud rate with 8N1 configuration.
     usart_set_baudrate(USART_DEV, USART_BAUD_RATE);
-  	usart_set_databits(USART_DEV, 8);
-  	usart_set_stopbits(USART_DEV, USART_STOPBITS_1);
-  	usart_set_mode(USART_DEV, USART_MODE_TX_RX);
-  	usart_set_parity(USART_DEV, USART_PARITY_NONE);
-  	usart_set_flow_control(USART_DEV, USART_FLOWCONTROL_NONE);
+    usart_set_databits(USART_DEV, 8);
+    usart_set_stopbits(USART_DEV, USART_STOPBITS_1);
+    usart_set_mode(USART_DEV, USART_MODE_TX_RX);
+    usart_set_parity(USART_DEV, USART_PARITY_NONE);
+    usart_set_flow_control(USART_DEV, USART_FLOWCONTROL_NONE);
 
     // Enable USART2 as debug output.
     usart_enable(USART_DEV);

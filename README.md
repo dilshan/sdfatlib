@@ -12,6 +12,8 @@ To build the entire project, use the `make` command.
 
 ## Test Setup
 
+![Schematic of the test setup](https://raw.githubusercontent.com/dilshan/sdfatlib/main/schematic/sdfatlib-stm32f103c8con.jpg)
+
 Required hardware modules for the test setup:
 
 - STM32F103C8T6 Blue Pill development board

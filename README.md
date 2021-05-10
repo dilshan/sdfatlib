@@ -26,4 +26,4 @@ In the default configuration, the debug logs are disabled in the Make file. To e
 
 ## License
 
-The code is released under the terms of the GNU General Public License (GPL), version 3 or later.
+The code is released under the terms of the [GNU General Public License](https://github.com/dilshan/sdfatlib/blob/main/LICENSE) (GPL), version 3 or later.

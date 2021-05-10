@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/dilshan/sdfatlib/actions/workflows/main.yml/badge.svg)](https://github.com/dilshan/sdfatlib/actions)
+
 # SD card extension for OpenFAT library
 
 This repository contains SD/MMC card driver for the [OpenFAT library](https://github.com/tmolteno/openfat). The SD card driver implements on top of the [LibOpenCM3 library](https://libopencm3.org/) and, it supports for [STM32 - ARM Cortex-M3](https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html) series of MCUs.

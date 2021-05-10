@@ -64,8 +64,8 @@ int main()
 	// Initialize SD card driver.
 	if(!sdDrvInit())
 	{
-		loggerOutputLine("Driver initialization fail");
-		while(1);
+            loggerOutputLine("Driver initialization fail");
+            while(1);
 	}
 
 	loggerOutputLine("Driver initialization successful");
@@ -78,43 +78,44 @@ int main()
 	// Initialize partition block device.
 	if(mbr_partition_init(&part, &dev, 0) == 0)
 	{
-		loggerOutputLine("mbr_partition_init successful");
+            loggerOutputLine("mbr_partition_init successful");
 	}
 	else
 	{
-		loggerOutputLine("mbr_partition_init fail");
-		while(1);
+            loggerOutputLine("mbr_partition_init fail");
+            while(1);
 	}
 
 	// Initialize and mount the FAT volume.
 	if(fat_vol_init((struct block_device *)&part, &volHandle) == 0)
 	{
-		loggerOutputLine("fat_vol_init successful");
-		sprintf(statusBuff, "FAT type = %d", volHandle.type);
-		loggerOutputLine(statusBuff);
-
+            loggerOutputLine("fat_vol_init successful");
+            sprintf(statusBuff, "FAT type = %d", volHandle.type);
+            loggerOutputLine(statusBuff);
 	}
 	else
 	{
-		loggerOutputLine("fat_vol_init fail");
-		while(1);
+            loggerOutputLine("fat_vol_init fail");
+            while(1);
 	}
 
 	// Start directory and file creation test (moved form example.c in original OpenFAT project).
 	loggerOutputLine("Start Dir/File test...");
 
-	for(int i = 0; i < 5; i++) {
-		sprintf(dirname, "Test%d", i);
-		fat_mkdir(&volHandle, dirname);
-		assert(fat_chdir(&volHandle, dirname) == 0);
+	for(int i = 0; i < 5; i++) 
+	{
+            sprintf(dirname, "Test%d", i);
+            fat_mkdir(&volHandle, dirname);
+            assert(fat_chdir(&volHandle, dirname) == 0);
 
-		for(int j = 0; j < 5; j++) {
-			sprintf(filename, "File%d", j);
-			assert(fat_create(&volHandle, filename, O_WRONLY, &fileHandle) == 0);
-			assert(fat_write(&fileHandle, buffer, sizeof(buffer)) == sizeof(buffer));
+		for(int j = 0; j < 5; j++) 
+		{
+                    sprintf(filename, "File%d", j);
+                    assert(fat_create(&volHandle, filename, O_WRONLY, &fileHandle) == 0);
+                    assert(fat_write(&fileHandle, buffer, sizeof(buffer)) == sizeof(buffer));
 		}
 
-		assert(fat_chdir(&volHandle, "..") == 0);
+            assert(fat_chdir(&volHandle, "..") == 0);
 	}	
 
 	loggerOutputLine("End Dir/File test...");
@@ -122,9 +123,9 @@ int main()
 
 	while(1)
 	{
-		gpio_toggle(GPIOC, GPIO13);
-		for(long p = 0; p < 0xFFFFFF; p++);
+            gpio_toggle(GPIOC, GPIO13);
+            for(long p = 0; p < 0xFFFFFF; p++);
 	}
 
-	return 0;
+    return 0;
 }
